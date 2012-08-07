@@ -3,6 +3,7 @@
 # :TODO
 #  . make so no keyboard commands are needed
 #  . find a way to securely install/distribute credentials
+echo "need sudo to install necessary dependencies..." &&
 sudo echo "starting bootstrap install of dev machine dependencies" &&
 echo "downloading and installing xcode" &&
 curl -LO "https://github.com/downloads/makanikai/machine-bootstrap/xcode44cltools_10_86938106a.dmg" &&
@@ -37,7 +38,7 @@ echo "ulimit -n 8192" >> ~/.bash_profile &&
 source ~/.bash_profile &&
 echo "bash profile upgraded and sourced" &&
 
-echo "generating ssh keys"
+echo "generating ssh keys" &&
 ssh-keygen -t rsa &&
 
 echo "downloading and installing virtualbox" &&
