@@ -4,7 +4,8 @@
 #  . make so no keyboard commands are needed
 #  . find a way to securely install/distribute credentials
 sudo echo "starting bootstrap install of dev machine dependencies" &&
-echo "installing xcode" &&
+echo "downloading and installing xcode" &&
+curl -LO "https://github.com/downloads/makanikai/machine-bootstrap/xcode44cltools_10_86938106a.dmg" &&
 hdiutil attach xcode44cltools_10_86938106a.dmg &&
 sudo installer -pkg "/Volumes/Command Line Tools (Mountain Lion)/Command Line Tools (Mountain Lion).mpkg" -target / &&
 hdiutil detach "/Volumes/Command Line Tools (Mountain Lion)" &&
@@ -39,13 +40,15 @@ echo "bash profile upgraded and sourced" &&
 echo "generating ssh keys"
 ssh-keygen -t rsa &&
 
-echo "installing virtualbox" &&
+echo "downloading and installing virtualbox" &&
+curl -LO "https://github.com/downloads/makanikai/machine-bootstrap/VirtualBox-4.1.18-78361-OSX.dmg" &&
 hdiutil attach VirtualBox-4.1.18-78361-OSX.dmg &&
 sudo installer -pkg "/Volumes/VirtualBox/VirtualBox.mpkg" -target / &&
 hdiutil detach "/Volumes/VirtualBox" &&
 echo "Installed Virtualbox" &&
 
-echo "Installing SublimeText 2" &&
+echo "downloading and installing SublimeText 2" &&
+curl -LO "https://github.com/downloads/makanikai/machine-bootstrap/Sublime%20Text%202.0.1.dmg" &&
 hdiutil attach "Sublime Text 2.0.1.dmg" &&
 cp -R "/Volumes/Sublime Text 2/Sublime Text 2.app" /Applications && 
 hdiutil detach "/Volumes/Sublime Text 2" &&
