@@ -3,17 +3,35 @@
 # :TODO
 #  . make so no keyboard commands are needed
 #  . find a way to securely install/distribute credentials
+# . FIX $path var to not be evaluated when added to bash_profile
+# . change urls to s3 urls
 echo "need sudo to install necessary dependencies..." &&
 sudo echo "starting bootstrap install of dev machine dependencies" &&
 echo "downloading and installing xcode" &&
-curl -LO "https://github.com/downloads/makanikai/machine-bootstrap/xcode44cltools_10_86938106a.dmg" &&
-hdiutil attach xcode44cltools_10_86938106a.dmg &&
-sudo installer -pkg "/Volumes/Command Line Tools (Mountain Lion)/Command Line Tools (Mountain Lion).mpkg" -target / &&
-hdiutil detach "/Volumes/Command Line Tools (Mountain Lion)" &&
-echo "installed command line tools" &&
+if [[ `uname -r` ==  12* ]]
+then
+    echo "discovered mountain lion as os version" &&
+    curl -LO "https://github.com/downloads/makanikai/machine-bootstrap/xcode44cltools_10_86938106a.dmg" &&
+    hdiutil attach xcode44cltools_10_86938106a.dmg &&
+    sudo installer -pkg "/Volumes/Command Line Tools (Mountain Lion)/Command Line Tools (Mountain Lion).mpkg" -target / &&
+    hdiutil detach "/Volumes/Command Line Tools (Mountain Lion)" &&
+    echo "installed command line tools for mountain lion"
+else
+    echo "assuming lion since mountain lion not discovered" &&
+    curl -LO "https://github.com/downloads/makanikai/machine-bootstrap/cltools_lion_march12.dmg" &&
+    hdiutil attach cltools_lion_march12.dmg &&
+    sudo installer -pkg "/Volumes/Command Line Tools/Command Line Tools.mpkg" -target / &&
+    hdiutil detach "/Volumes/Command Line Tools" &&
+    echo "installed command line tools for lion" &&
+    echo "install gcc package 4.2 for lion" &&
+    curl -LO "https://github.com/downloads/jcliff/osx-gcc-installer/GCC-10.7-v2.pkg" &&
+    sudo installer -pkg GCC-10.7-v2.pkg -target / &&
+    echo "installed gcc 4.2 for lion."
+fi
 
 echo "installing homebrew from tsumobi repository" &&
 ruby -e "$(curl -fsSL https://raw.github.com/gist/1590468/ed994e512aea043812c33edabf4ee02b6d977ef7)" &&
+echo "installed homebrew!" &&
 
 echo "installing package dependencies" &&
 brew install ruby &&
@@ -57,11 +75,14 @@ echo "Installed Sublime Text 2" &&
 
 
 echo " " &&
-echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" &&
-echo "XXXX  1) You still need to add keys to Gerrit, chump.  XXXX" &&
-echo "XXXX  2) After that you can repo checkout to ~/code.   XXXX" &&
-echo "XXXX  3) Now set up your .fog credentials for aws      XXXX" &&
-echo "XXXX  4) if all is well,                               XXXX" &&
-echo "XXXX       cd ~/code/tools/review/infrastructure       XXXX" &&
-echo "XXXX       ./build dev                                 XXXX" &&
-echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" 
+echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" &&
+echo "XXXX  1) You still need to add keys to Gerrit, chump.            XXXX" &&
+echo "XXXX  2) After that you can repo checkout to ~/code.             XXXX" &&
+echo "XXXX  2) After that you can repo checkout to ~/code.             XXXX" &&
+echo "XXXX  cd code                                                    XXXX" &&
+echo "XXXX repo init -u ssh://review.source.tsumobi.com:29418/manifest XXXX" &&
+echo "XXXX  3) Now set up your .fog credentials for aws                XXXX" &&
+echo "XXXX  4) if all is well,                                         XXXX" &&
+echo "XXXX       cd ~/code/tools/review/infrastructure                 XXXX" &&
+echo "XXXX       ./build dev                                           XXXX" &&
+echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" 
