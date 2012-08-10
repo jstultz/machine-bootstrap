@@ -5,6 +5,7 @@
 #  . find a way to securely install/distribute credentials
 # . FIX $path var to not be evaluated when added to bash_profile
 # . change urls to s3 urls
+# pstree and watch
 echo "need sudo to install necessary dependencies..." &&
 sudo echo "starting bootstrap install of dev machine dependencies" &&
 echo "downloading and installing xcode" &&
