@@ -2,12 +2,19 @@
 
 set -e
 
-echo "Installing Xcode command line tools..."
-curl -LO "https://s3.amazonaws.com/bootstrap-machine-installers/xcode452cltools10_86938211a.dmg"
-hdiutil attach xcode452cltools10_86938211a.dmg
-sudo installer -pkg "/Volumes/Command Line Tools (Mountain Lion)/Command Line Tools (Mountain Lion).mpkg" -target /
-hdiutil detach "/Volumes/Command Line Tools (Mountain Lion)"
-rm xcode452cltools10_86938211a.dmg
+echo "Installing Xcode..."
+curl -LO "https://s3.amazonaws.com/bootstrap-machine-installers/xcode4520418508a.dmg"
+hdiutil attach xcode4520418508a.dmg
+echo "Copy Xcode to the Applications folder, then press enter"
+read
+echo "Open Xcode from the Applications folder, then install the command line "
+echo " tools. Open Preferences -> Downloads and click the Install button next "
+echo " to Command Line Tools; when completed, press enter"
+hdiutil detach "/Volumes/Xcode"
+rm xcode4520418508a.dmg
+
+# TODO maybe change this
+# xcode-select -switch /
 
 echo "Installing homebrew..."
 ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
@@ -21,7 +28,7 @@ function use_brew_version {
 
 # Set PATH to provide access to homebrew installs
 echo 'export PATH=$HOME/bin:/usr/local/bin:$PATH' >> ~/.bash_profile
-. ~/.bash_profile
+. ~/.bash_profile # XXX this doesn't affect the outer shell
 
 echo "Installing gnu gcc and associated tools..."
 brew tap homebrew/dupes
@@ -31,7 +38,7 @@ brew install autoconf automake apple-gcc42
 
 echo "Installing ruby"
 use_brew_version ruby 1.9.2-p180
-brew install ruby --use-gcc
+brew install --use-gcc --env=std ruby
 
 echo "Installing git"
 use_brew_version git 1.8.1.1
@@ -81,3 +88,7 @@ repo sync
 
 # TODO still need to get web certificates
 # TODO still need to setup .fog credentials
+# TODO SECURE_KEY_DIR??
+# TODO set ulimit
+# TODO add mre/bin to path
+# TODO setup gimme tab completion
